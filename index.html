@@ -26,48 +26,52 @@
     <script>
         // Parameters
         let currentScene = 0;
+		async function init() {
 
         // Data
-        const data = [
-            // Your data here
-        ];
+        const data = await d3.csv('https://flunky.github.io/cars2017.csv');
 
-        // Scenes
-        function initialScene() {
-            const svg = d3.select("#visualization").append("svg")
-                .attr("width", 800)
-                .attr("height", 600);
+        // Parse data
+      data.forEach(d => {
+        d.AverageCityMPG = +d.AverageCityMPG;
+        d.AverageHighwayMPG = +d.AverageHighwayMPG;
+        d.EngineCylinders = +d.EngineCylinders;
+      });
+		// Create the x scale using scaleLog
+      var x = d3.scaleLog()
+        .base(10)
+        .domain([10, 150])
+        .range([0, 200]);
 
-            // Your D3 code for the initial scene here
-        }
+      // Create the y scale using scaleLog
+      var y = d3.scaleLog()
+        .base(10)
+        .domain([10, 150])
+        .range([200, 0]);
 
-        function detailScene() {
-            const svg = d3.select("#visualization").append("svg")
-                .attr("width", 800)
-                .attr("height", 600);
+		d3.select("svg").append("g").attr("transform", "translate(50,50)").selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => x(d.AverageCityMPG))
+        .attr("cy", d => y(d.AverageHighwayMPG))
+        .attr("r", d => 2 + d.EngineCylinders);
 
-            // Your D3 code for the detail scene here
-        }
 
-        function conclusionScene() {
-            const svg = d3.select("#visualization").append("svg")
-                .attr("width", 800)
-                .attr("height", 600);
 
-            // Your D3 code for the conclusion scene here
-        }
+      // Add x axis
+      const xAxis = d3.axisBottom(x)
+        .tickValues([10, 20, 50, 100])
+        .tickFormat(d3.format("~s"));
 
-        // Triggers
-        function nextScene() {
-            d3.select("#visualization").html("");
-            currentScene++;
-            if (currentScene === 1) initialScene();
-            else if (currentScene === 2) detailScene();
-            else if (currentScene === 3) conclusionScene();
-        }
+	// Add y axis
+      const yAxis = d3.axisLeft(y)
+        .tickValues([10, 20, 50, 100])
+        .tickFormat(d3.format("~s"));
+		d3.select("svg").append("g").attr("transform", "translate(50,50)").call(yAxis);
+		d3.select("svg").append("g").attr("transform", "translate(50,250)").call(xAxis);
 
-        // Initialize
-        nextScene();
+   }
     </script>
 </body>
 </html>
