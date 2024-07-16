@@ -19,9 +19,12 @@
         }
         /* Add additional CSS styles as needed */
     </style>
+</svg>
 </head>
 <body>
-    <div id="visualization"></div>
+    <div id="visualization">        
+		<svg width="800" height="600"></svg></div>
+
     <!-- JavaScript Code -->
     <script>
         // Parameters
@@ -72,6 +75,7 @@
 		d3.select("svg").append("g").attr("transform", "translate(50,250)").call(xAxis);
 
    }
+           init();
     </script>
 </body>
 </html>
