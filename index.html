@@ -1,1 +1,73 @@
-"Hello World" 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Narrative Visualization</title>
+    <!-- D3.js Library -->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://d3-annotation.susielu.com/v2/d3-annotation.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <!-- CSS Styles -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #visualization {
+            width: 800px;
+            height: 600px;
+            margin: 0 auto;
+        }
+        /* Add additional CSS styles as needed */
+    </style>
+</head>
+<body>
+    <div id="visualization"></div>
+    <!-- JavaScript Code -->
+    <script>
+        // Parameters
+        let currentScene = 0;
+
+        // Data
+        const data = [
+            // Your data here
+        ];
+
+        // Scenes
+        function initialScene() {
+            const svg = d3.select("#visualization").append("svg")
+                .attr("width", 800)
+                .attr("height", 600);
+
+            // Your D3 code for the initial scene here
+        }
+
+        function detailScene() {
+            const svg = d3.select("#visualization").append("svg")
+                .attr("width", 800)
+                .attr("height", 600);
+
+            // Your D3 code for the detail scene here
+        }
+
+        function conclusionScene() {
+            const svg = d3.select("#visualization").append("svg")
+                .attr("width", 800)
+                .attr("height", 600);
+
+            // Your D3 code for the conclusion scene here
+        }
+
+        // Triggers
+        function nextScene() {
+            d3.select("#visualization").html("");
+            currentScene++;
+            if (currentScene === 1) initialScene();
+            else if (currentScene === 2) detailScene();
+            else if (currentScene === 3) conclusionScene();
+        }
+
+        // Initialize
+        nextScene();
+    </script>
+</body>
+</html>
