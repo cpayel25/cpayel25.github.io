@@ -28,6 +28,9 @@
     <h1>Overview of Covid cases and deaths between March 2020 till the end of March 2021</h1>
     <div id="visualization">
         <svg width="800" height="600"></svg>
+        <g id="plotArea"></g> <!-- Group for the plot area -->
+        <text id="xAxisTitle"></text> <!-- Placeholder for X axis title -->
+        <text id="yAxisTitle"></text> <!-- Placeholder for Y axis title -->
     </div>
 
     <!-- JavaScript Code -->
@@ -41,6 +44,10 @@
                 d.total_inmate_cases = +d.total_inmate_cases; 
                 d.total_officer_cases = +d.total_officer_cases; 
             });
+            // Create the plot area group
+/*             const plotArea = svg.select("#plotArea")
+                                .attr("transform", `translate(${margin.left},${margin.top})`); */
+
 
             // Define dimensions and margins
             const margin = {top: 50, right: 50, bottom: 50, left: 50},
@@ -72,14 +79,38 @@
 
             // Add x axis
             const xAxis = d3.axisBottom(x).ticks(10);
+            /* plotArea.append("g")
+                    .attr("transform", `translate(0,${height})`)
+                    .call(xAxis); */
+
             svg.append("g")
                .attr("transform", `translate(0,${height})`)
                .call(xAxis);
 
+            // Add x axis title
+            svg.append("text")
+               .attr("x", width / 2)
+               .attr("y", height + margin.top + 20) // Adjust spacing as needed
+               .attr("text-anchor", "middle")
+               .text("Total Inmate Cases");
+
+            
+
             // Add y axis
             const yAxis = d3.axisLeft(y).ticks(10);
+            /* plotArea.append("g")
+                    .call(yAxis);*/
             svg.append("g")
                .call(yAxis);
+ 
+            // Add y axis title
+            svg.append("text")
+               .attr("transform", "rotate(-90)")
+               .attr("x", -height / 2)
+               .attr("y", -margin.left) // Adjust spacing as needed
+               .attr("text-anchor", "end")
+               .text("Total Officer Cases");
+            
 
             // Create scatter plot
             svg.selectAll("circle")
