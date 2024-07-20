@@ -342,7 +342,9 @@ Data collected by The New York Times for state and federal prisons; immigration 
                     svg.append("g")
                        .attr("class", "annotation-group")
                        .call(makeAnnotations);
-                  
+                    /*svg.selectAll(".annotation-note-label")
+                       .call(wrapText, 100); // Adjust width as needed
+                       */
                        svg.selectAll(".annotation-note-label")
    .style("fill", "black") // Set fill color directly
    .style("font-size", "16px") // Ensure font size
@@ -489,7 +491,6 @@ svg.selectAll(".annotation-title-label")
                 d3.select("#chart5 svg").selectAll("*").remove();
                 d3.select("#chart6 svg").selectAll("*").remove();
                 d3.select("#legend3 svg").selectAll("*").remove();
-                
                 
                 if (view === "top5") {
                     createBarChart("#chart5 svg", top5CasesArray, d => d.total_inmate_cases, "Total Inmate Cases", true, annotationsCasesTop5);
