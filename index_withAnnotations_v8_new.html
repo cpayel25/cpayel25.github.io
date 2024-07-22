@@ -244,7 +244,6 @@ async function init() {
     const top5CitiesDataByState = new Map();
     const top5CitiesDataByState2 = new Map();
 	
-	
 	const allStates1 = aggregatedCasesArray.map(d => d.facility_state); // Extract the state names from all states cases data
     const allStates2 = aggregatedCasesArray.map(d => d.facility_state); // Extract the state names from all states 5 deaths data
 	
@@ -292,8 +291,8 @@ for (const state of allStates1) {
         const AllcitiesArray = Array.from(AllcitiesData, ([facility_city, total_inmate_cases]) => ({facility_city, total_inmate_cases}));
         // Sort the cities array by total inmate cases in descending order and get the top 5 cities
         AllcitiesArray.sort((a, b) => b.total_inmate_cases - a.total_inmate_cases);
-        const AllCitiesData = AllcitiesArray.slice(0, 10);
-        AllCitiesDataByState.set(state, AllCitiesData);
+        //const AllCitiesData = AllcitiesArray.slice(0, 5);
+        AllCitiesDataByState.set(state, AllcitiesArray);
     }
 	
 	for (const state of allStates2) {
@@ -305,8 +304,8 @@ for (const state of allStates1) {
         const AllcitiesArray2 = Array.from(AllcitiesData2, ([facility_city, total_inmate_cases]) => ({facility_city, total_inmate_cases}));
         // Sort the cities array by total inmate cases in descending order and get the top 5 cities
         AllcitiesArray2.sort((a, b) => b.total_inmate_cases - a.total_inmate_cases);
-        const AllCitiesData2 = AllcitiesArray2.slice(0, 10);
-        AllCitiesDataByState2.set(state, AllCitiesData2);
+        //const AllCitiesData = AllcitiesArray.slice(0, 5);
+        AllCitiesDataByState2.set(state, AllcitiesArray2);
     }
 	
 	

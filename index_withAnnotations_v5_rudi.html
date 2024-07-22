@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Narrative Visualization</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-annotation/2.5.1/d3-annotation.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #505143;
+            background-color: #9C9E84;
+        }
+        #visualization {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 20px;
+            width: 100%;
+            margin: 0 auto;
+            justify-items: center;
+        }
+        h1 {
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .legend {
+            font-size: 14px;
+        }
+        .legend-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .button-container {
+            text-align: center;
+            margin: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #505143;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #7F815C;
+        }
+        .hidden {
+            display: none;
+        }
+        .bar text {
+            font-size: 12px;
+            fill: white;
+            text-anchor: middle;
+        }
+        .bar text.vertical {
+            transform: rotate(-90deg);
+            transform-origin: middle;
+            text-anchor: start;
+        }
+        #dropdown-menu {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #view-selection {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #505143;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .annotation-note {
+            fill: black;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .annotation-title {
+            fill: black;
+            font-weight: bold;
+        }
+        #footnote {
+            font-size: 16px;
+            color: #505143;
+            text-align: right;
+            margin: 10px;
+            padding-right: 10px;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+        }
+        .caption {
+            font-size: 16px;
+            color: #505143;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Overview of Covid cases and deaths between March 2020 to March 2021 among inmates in federal prisons</h1>
+    <div id="scene1">
+        <div id="visualization">
+            <div id="chart1">
+                <svg width="600" height="500"></svg>
+            </div>
+            <div id="chart2">
+                <svg width="600" height="500"></svg>
+            </div>
+        </div>
+        <div id="legend1" class="legend-container">
+            <svg width="1200" height="100"></svg>
+        </div>
+        <div class="button-container">
+            <button id="next1">Next</button>
+        </div>
+        <div class="caption">
+            Data source: https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv
+            Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.
+        </div>
+        <div id="footnote">
+            Created by: Payel Chakraborty
+        </div>
+    </div>
+    <div id="scene2" class="hidden">
+        <div id="visualization">
+            <div id="chart3">
+                <svg width="600" height="500"></svg>
+            </div>
+            <div id="chart4">
+                <svg width="600" height="500"></svg>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="previous2">Previous</button>
+            <button id="next2">Next</button>
+        </div>
+        <div id="legend2" class="legend-container">
+            <svg width="1200" height="100"></svg>
+        </div>
+        <div class="caption">
+            Data source: https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv
+            Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.
+        </div>
+        <div id="footnote">
+            Created by: Payel Chakraborty
+        </div>
+    </div>
+    <div id="scene3" class="hidden">
+        <div id="dropdown-menu">
+            <label for="view-selection">Select States View: </label>
+            <select id="view-selection">
+                <option value="top5">Top 5 States</option>
+                <option value="all">All States</option>
+            </select>
+        </div>
+        <div id="visualization">
+            <div id="chart5">
+                <svg width="600" height="500"></svg>
+            </div>
+            <div id="chart6">
+                <svg width="600" height="500"></svg>
+            </div>
+            <div id="chart7">
+                <svg width="600" height="500"></svg>
+            </div>
+            <div id="chart8">
+                <svg width="600" height="500"></svg>
+            </div>
+        </div>
+        <div id="legend3" class="legend-container">
+            <svg width="1200" height="100"></svg>
+        </div>
+        <div class="button-container">
+            <button id="previous3">Previous</button>
+        </div>
+        <div class="caption">
+            Data source: https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv
+            Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.
+        </div>
+        <div id="footnote">
+            Created by: Payel Chakraborty
+        </div>
+    </div>
+    <script>
+        let data;
+
+        async function init() {
+            try {
+                data = await d3.csv('./facilities.csv');
+                console.log("Data loaded successfully:", data);
+            } catch (error) {
+                console.error("Error loading data:", error);
+                return;
+            }
+
+            const aggregatedCasesData = d3.rollup(
+                data,
+                v => d3.sum(v, d => +d.total_inmate_cases),
+                d => d.facility_state
+            );
+            const aggregatedDeathsData = d3.rollup(
+                data,
+                v => d3.sum(v, d => +d.total_inmate_deaths),
+                d => d.facility_state
+            );
+
+            const aggregatedCasesArray = Array.from(aggregatedCasesData, ([facility_state, total_inmate_cases]) => ({facility_state, total_inmate_cases}));
+            const aggregatedDeathsArray = Array.from(aggregatedDeathsData, ([facility_state, total_inmate_deaths]) => ({facility_state, total_inmate_deaths}));
+
+            aggregatedCasesArray.sort((a, b) => b.total_inmate_cases - a.total_inmate_cases);
+            aggregatedDeathsArray.sort((a, b) => b.total_inmate_deaths - a.total_inmate_deaths);
+
+            const top5CasesData = aggregatedCasesArray.slice(0, 5);
+            const top5DeathsData = aggregatedDeathsArray.slice(0, 5);
+
+            const top5States = top5CasesData.map(d => d.facility_state);
+
+            const top5CitiesDataByState = new Map();
+            for (const state of top5States) {
+                const citiesData = d3.rollup(
+                    data.filter(d => d.facility_state === state),
+                    v => d3.sum(v, d => +d.total_inmate_cases),
+                    d => d.facility_city
+                );
+                const citiesArray = Array.from(citiesData, ([facility_city, total_inmate_cases]) => ({facility_city, total_inmate_cases}));
+                citiesArray.sort((a, b) => b.total_inmate_cases - a.total_inmate_cases);
+                top5CitiesDataByState.set(state, citiesArray.slice(0, 5));
+            }
+
+            function createBarChart(data, selector, xKey, yKey, color) {
+                console.log("Creating bar chart with data:", data);
+
+                const svg = d3.select(selector).select("svg");
+                if (svg.empty()) {
+                    console.error(`No SVG element found for selector: ${selector}`);
+                    return;
+                }
+
+                const width = +svg.attr("width");
+                const height = +svg.attr("height");
+                const margin = { top: 20, right: 30, bottom: 40, left: 90 };
+
+                const x = d3.scaleBand()
+                    .domain(data.map(d => d[xKey]))
+                    .range([margin.left, width - margin.right])
+                    .padding(0.1);
+
+                const y = d3.scaleLinear()
+                    .domain([0, d3.max(data, d => d[yKey])])
+                    .nice()
+                    .range([height - margin.bottom, margin.top]);
+
+                svg.append("g")
+                    .attr("fill", color)
+                    .selectAll("rect")
+                    .data(data)
+                    .enter().append("rect")
+                    .attr("x", d => x(d[xKey]))
+                    .attr("y", d => y(d[yKey]))
+                    .attr("height", d => y(0) - y(d[yKey]))
+                    .attr("width", x.bandwidth())
+                    .append("title")
+                    .text(d => `${d[xKey]}: ${d[yKey]}`);
+
+                svg.append("g")
+                    .attr("class", "x-axis")
+                    .attr("transform", `translate(0,${height - margin.bottom})`)
+                    .call(d3.axisBottom(x).tickSizeOuter(0))
+                    .selectAll("text")
+                    .attr("transform", "rotate(-45)")
+                    .style("text-anchor", "end");
+
+                svg.append("g")
+                    .attr("class", "y-axis")
+                    .attr("transform", `translate(${margin.left},0)`)
+                    .call(d3.axisLeft(y).ticks(null, "s"));
+
+                svg.append("text")
+                    .attr("x", width / 2)
+                    .attr("y", height)
+                    .attr("text-anchor", "middle")
+                    .text(`${xKey} (Top 5)`);
+
+                svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 0)
+                    .attr("x", -height / 2)
+                    .attr("dy", "1em")
+                    .attr("text-anchor", "middle")
+                    .text(`${yKey}`);
+            }
+
+            function updateTop5Charts(state) {
+                const citiesData = top5CitiesDataByState.get(state);
+                if (citiesData) {
+                    d3.select("#chart7 svg").selectAll("*").remove();
+                    createBarChart(citiesData, "#chart7", "facility_city", "total_inmate_cases", "blue");
+                } else {
+                    console.error(`No data found for state: ${state}`);
+                }
+            }
+
+            createBarChart(aggregatedCasesArray, "#chart1", "facility_state", "total_inmate_cases", "blue");
+            createBarChart(aggregatedDeathsArray, "#chart2", "facility_state", "total_inmate_deaths", "red");
+            createBarChart(top5CasesData, "#chart3", "facility_state", "total_inmate_cases", "blue");
+            createBarChart(top5DeathsData, "#chart4", "facility_state", "total_inmate_deaths", "red");
+
+            createBarChart(aggregatedCasesArray, "#chart5", "facility_state", "total_inmate_cases", "blue");
+            createBarChart(aggregatedDeathsArray, "#chart6", "facility_state", "total_inmate_deaths", "red");
+
+            document.getElementById("next1").addEventListener("click", function() {
+                document.getElementById("scene1").classList.add("hidden");
+                document.getElementById("scene2").classList.remove("hidden");
+            });
+
+            document.getElementById("previous2").addEventListener("click", function() {
+                document.getElementById("scene2").classList.add("hidden");
+                document.getElementById("scene1").classList.remove("hidden");
+            });
+
+            document.getElementById("next2").addEventListener("click", function() {
+                document.getElementById("scene2").classList.add("hidden");
+                document.getElementById("scene3").classList.remove("hidden");
+            });
+
+            document.getElementById("previous3").addEventListener("click", function() {
+                document.getElementById("scene3").classList.add("hidden");
+                document.getElementById("scene2").classList.remove("hidden");
+            });
+
+            document.getElementById("view-selection").addEventListener("change", function() {
+                const view = this.value;
+                if (view === "top5") {
+                    createBarChart(top5CasesData, "#chart5", "facility_state", "total_inmate_cases", "blue");
+                    createBarChart(top5DeathsData, "#chart6", "facility_state", "total_inmate_deaths", "red");
+
+                    d3.selectAll("#chart5 svg rect").on("click", function(event, d) {
+                        updateTop5Charts(d.facility_state);
+                    });
+                } else if (view === "all") {
+                    createBarChart(aggregatedCasesArray, "#chart5", "facility_state", "total_inmate_cases", "blue");
+                    createBarChart(aggregatedDeathsArray, "#chart6", "facility_state", "total_inmate_deaths", "red");
+                }
+            });
+
+            // Initialize with top5 view
+            document.getElementById("view-selection").value = "top5";
+            createBarChart(top5CasesData, "#chart5", "facility_state", "total_inmate_cases", "blue");
+            createBarChart(top5DeathsData, "#chart6", "facility_state", "total_inmate_deaths", "red");
+
+            d3.selectAll("#chart5 svg rect").on("click", function(event, d) {
+                updateTop5Charts(d.facility_state);
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
