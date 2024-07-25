@@ -707,7 +707,7 @@
             d3.select('#chart8').style('display', null);
             d3.select('#chart9').style('display', 'none');
             d3.select('#chart10').style('display', 'none');
-            d3.selectAll(".annotation").remove();
+            //d3.selectAll(".annotation").remove();
             // Update charts for top 5 states
             createBarChart('#chart5 svg', top5CasesData, 'facility_state', 'total_inmate_cases', 'Top 5 States by Inmate Cases', colorScale,true,scene3stateView);
             createBarChart('#chart6 svg', top5DeathsData, 'facility_state', 'total_inmate_deaths', 'Top 5 States by Inmate Deaths', colorScale,true,scene3stateView2); // Placeholder for chart6
@@ -741,7 +741,7 @@
             d3.select('#chart8').style('display', 'none');
             d3.select('#chart9').style('display', null);
             d3.select('#chart10').style('display', null);
-            d3.selectAll(".annotation").remove();
+           // d3.selectAll(".annotation").remove();
             // Update charts for all states
             createBarChart('#chart5 svg', aggregatedCasesArray, 'facility_state', 'total_inmate_cases', 'Total Inmate Cases per State', colorScale,false,scene3stateView_All);
             createBarChart('#chart6 svg', aggregatedDeathsArray, 'facility_state', 'total_inmate_deaths', 'Total Inmate Deaths per State', colorScale,false,scene3stateView_All2); // Placeholder for chart6
