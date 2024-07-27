@@ -14,6 +14,7 @@
             font-family: Arial, sans-serif;
             color: #505143; /* Set font color */
             background-color: #9C9E84; /* Set background color */
+            padding-bottom: 50px; /* Ensure there is enough space at the bottom */
         }
         #visualization {
             display: grid;
@@ -23,11 +24,20 @@
             margin: 0 auto;
             justify-items: center;
         }
+        #visualization svg {
+    padding: 20px; /* Add padding to SVG containers */
+}
         h1 {
-            font-size: 50px; /* Increase font size */
+            font-size: 40px; /* Increase font size */
             font-weight: bold; /* Make font bold */
             text-align: center; /* Center align the header */
         }
+        p {
+            font-size: 35x; /* Increase font size */
+            font-weight: bold; /* Make font bold */
+            text-align: center; /* Center align the header */
+        }
+        
         .legend {
             font-size: 14px;
         }
@@ -132,8 +142,9 @@
     </style>
 </head>
 <body>
-    <h1>Overview of Covid cases and deaths between March 2020 to March 2021 among inmates in federal prisons</h1>
-
+    <h1>Narrative Visualization: Overview of Covid Cases & Deaths between March 2020 to March 2021 among inmates in federal prisons</h1>
+    <p>This dashboard will help to understand the number of Covid cases and deaths in the centers described in caption below, across the country and analyze which state and which cities had the worst plight.</p>
+    
     <div id="scene1">
         <div id="visualization">
             <div id="chart1">
@@ -150,10 +161,12 @@
             <button id="next1">Next</button>
         </div>
         <div class="caption">
-            Data source: https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv
-            Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.
-            This dashboard will help to understand the number of Covid cases and deaths in these centers across the country and analyze which state and which cities had the worst plight.
+            <a href="https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv">https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv</a><br>
+            <b>Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.</b>
         </div>
+            
+            <!--This dashboard will help to understand the number of Covid cases and deaths in these centers across the country and analyze which state and which cities had the worst plight. -->
+        
         <div id="footnote">
             Created by: Payel Chakraborty
         </div>
@@ -176,9 +189,8 @@
             <svg width="1200" height="100"></svg>
         </div>
         <div class="caption">
-            Data source: https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv
-            Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.
-            This dashboard will help to understand the number of Covid cases and deaths in these centers across the country and analyze which state and which cities had the worst plight.
+            <a href="https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv">https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv</a><br>
+            <b>Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.</b>
         </div>
         <div id="footnote">
             Created by: Payel Chakraborty
@@ -220,9 +232,8 @@
             <button id="previous3">Previous</button>
         </div>
         <div class="caption">
-            Data source: https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv
-            Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.
-            This dashboard will help to understand the number of Covid cases and deaths in these centers across the country and analyze which state and which cities had the worst plight.
+            <a href="https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv">https://github.com/nytimes/covid-19-data/tree/master/prisons/facilities.csv</a><br>
+            <b>Data collected by The New York Times for state and federal prisons; immigration detention centers; juvenile detention facilities; local, regional and reservation jails; and those in the custody of the U.S. Marshals Service.</b>
         </div>
         <div id="footnote">
             Created by: Payel Chakraborty
@@ -709,7 +720,7 @@
                             
                         }
                     ];*/
-
+                    //d3.selectAll('.annotation-group').remove();
         if (selectedView === 'top5') {
             d3.select('#chart7').style('display', null);
             d3.select('#chart8').style('display', null);
@@ -727,15 +738,16 @@
             // Handle state selection and display top 5 cities
             d3.selectAll('#chart5 svg .bar').on('click', (event, d) => {
                 const state = d.facility_state;
+                const stateColor = colorScale(state);
                 const top5CitiesData = top5CitiesDataByState.get(state);
-                createBarChart('#chart7 svg', top5CitiesData, 'facility_city', 'total_inmate_cases', `Top 5 Cities in ${state} by Inmate Cases`, colorScale,true,[],'steelblue');
+                createBarChart('#chart7 svg', top5CitiesData, 'facility_city', 'total_inmate_cases', `Top 5 Cities in ${state} by Inmate Cases`, colorScale,true,[],stateColor);
                 
                 const svg7 = d3.select("#chart7 svg");
                 //svg7.selectAll(".annotation").remove();  // Clear existing annotations
                 svg7.append("text")
     .attr("x", 250) // Adjust x position
     .attr("y", 70) // Adjust y position
-    .attr("class", "annotation")
+    .attr("class", "annotation-group")
     .text("Note: The city with highest cases in California has a blank city name in the data source.")
     .style("font-size", "12px")
     .style("font-weight", "bold")
@@ -750,8 +762,9 @@
             // Handle state selection and display top 5 cities
             d3.selectAll('#chart6 svg .bar').on('click', (event, d) => {
                 const state = d.facility_state;
+                const stateColor = colorScale(state);
                 const top5CitiesData2 = top5CitiesDataByState2.get(state);
-                createBarChart('#chart8 svg', top5CitiesData2, 'facility_city', 'total_inmate_deaths', `Total Inmate Deaths in Top 5 Cities of ${state}`, colorScale,true,[],'steelblue'); // Placeholder for chart8
+                createBarChart('#chart8 svg', top5CitiesData2, 'facility_city', 'total_inmate_deaths', `Total Inmate Deaths in Top 5 Cities of ${state}`, colorScale,true,[],stateColor); // Placeholder for chart8
             });
            
             // Update legend for top 5 states
@@ -775,8 +788,9 @@
             //d3.select("#chart7").classed("hidden", true);
             d3.selectAll('#chart5 svg .bar').on('click', (event, d) => {
                 const state = d.facility_state;
+                const stateColor = colorScale(state);
                 const AllCitiesData = AllCitiesDataByState.get(state);
-                createBarChart('#chart9 svg', AllCitiesData, 'facility_city', 'total_inmate_cases', `All Cities in ${state} by Inmate Cases`, colorScale,true,[],'steelblue');
+                createBarChart('#chart9 svg', AllCitiesData, 'facility_city', 'total_inmate_cases', `All Cities in ${state} by Inmate Cases`, colorScale,true,[],stateColor);
             
             const svg9 = d3.select("#chart9 svg");
             //svg9.selectAll(".annotation").remove();  // Clear existing annotations
@@ -784,7 +798,7 @@
                 svg9.append("text")
     .attr("x", 250) // Adjust x position
     .attr("y", 70) // Adjust y position
-    .attr("class", "annotation")
+    .attr("class", "annotation-group")
     .text("Note: The city with highest cases in California has a blank city name in the data source.")
     .style("font-size", "12px")
     .style("font-weight", "bold")
@@ -794,8 +808,9 @@
 });  
             d3.selectAll('#chart6 svg .bar').on('click', (event, d) => {
                 const state = d.facility_state;
+                const stateColor = colorScale(state);
                 const AllCitiesData2 = AllCitiesDataByState2.get(state);
-                createBarChart('#chart10 svg', AllCitiesData2, 'facility_city', 'total_inmate_cases', `All Cities in ${state} by Inmate Deaths`, colorScale,true,[],'steelblue');
+                createBarChart('#chart10 svg', AllCitiesData2, 'facility_city', 'total_inmate_cases', `All Cities in ${state} by Inmate Deaths`, colorScale,true,[],stateColor);
             });
             // Update legend for all states
             d3.select('#legend3 svg').style('display', null);
