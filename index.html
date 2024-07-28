@@ -431,8 +431,8 @@
         
         createBarChart('#chart1 svg', aggregatedCasesArray, 'facility_state', 'total_inmate_cases', 'Total Inmate Cases per State',colorScale,false,[],null,false,'tooltip1');
         createBarChart('#chart2 svg', aggregatedDeathsArray, 'facility_state', 'total_inmate_deaths', 'Total Inmate Deaths per State',colorScale,false,annotationsDeaths,null,false,'tooltip1');
-        createBarChart('#chart3 svg', top5CasesData, 'facility_state', 'total_inmate_cases', 'Top 5 States by Inmate Cases',colorScale,true,annotationsCasesTop5,null,false);
-        createBarChart('#chart4 svg', top5DeathsData, 'facility_state', 'total_inmate_deaths', 'Top 5 States by Inmate Deaths',colorScale,true,annotationsDeathsTop5,null,false);
+        createBarChart('#chart3 svg', top5CasesData, 'facility_state', 'total_inmate_cases', 'Total Inmate Cases per Top 5 States',colorScale,true,annotationsCasesTop5,null,false);
+        createBarChart('#chart4 svg', top5DeathsData, 'facility_state', 'total_inmate_deaths', 'Total Inmate Deaths per Top 5 States',colorScale,true,annotationsDeathsTop5,null,false);
 
         createLegend('#legend1 svg', aggregatedCasesArray.map(d => d.facility_state),colorScale);
         createLegend('#legend2 svg', top5CasesData.map(d => d.facility_state),colorScale);
@@ -753,8 +753,8 @@
             //d3.select("#chart9-annotation").style("display", "none");
             //d3.selectAll(".annotation").remove();
             // Update charts for top 5 states
-            createBarChart('#chart5 svg', top5CasesData, 'facility_state', 'total_inmate_cases', 'Top 5 States by Inmate Cases', colorScale,true,scene3stateView,null,false,'tooltip3');
-            createBarChart('#chart6 svg', top5DeathsData, 'facility_state', 'total_inmate_deaths', 'Top 5 States by Inmate Deaths', colorScale,true,scene3stateView2,null,false,'tooltip3'); // Placeholder for chart6
+            createBarChart('#chart5 svg', top5CasesData, 'facility_state', 'total_inmate_cases', 'Total Inmate Cases per Top 5 States', colorScale,true,scene3stateView,null,false,'tooltip3');
+            createBarChart('#chart6 svg', top5DeathsData, 'facility_state', 'total_inmate_deaths', 'Total Inmate Deaths per Top 5 States', colorScale,true,scene3stateView2,null,false,'tooltip3'); // Placeholder for chart6
 
             // Clear previous event handlers
             d3.selectAll('#chart5 svg .bar').on('click', null);
@@ -764,7 +764,7 @@
                 const state = d.facility_state;
                 const stateColor = colorScale(state);
                 const top5CitiesData = top5CitiesDataByState.get(state);
-                createBarChart('#chart7 svg', top5CitiesData, 'facility_city', 'total_inmate_cases', `Top 5 Cities in ${state} by Inmate Cases`, colorScale,true,[],stateColor,true,false);
+                createBarChart('#chart7 svg', top5CitiesData, 'facility_city', 'total_inmate_cases', `Total Inmate Cases per Top 5 Cities in ${state}`, colorScale,true,[],stateColor,true,false);
                 
                 const svg7 = d3.select("#chart7 svg");
                 //svg7.selectAll(".annotation").remove();  // Clear existing annotations
@@ -788,7 +788,7 @@
                 const state = d.facility_state;
                 const stateColor = colorScale(state);
                 const top5CitiesData2 = top5CitiesDataByState2.get(state);
-                createBarChart('#chart8 svg', top5CitiesData2, 'facility_city', 'total_inmate_deaths', `Total Inmate Deaths in Top 5 Cities of ${state}`, colorScale,true,[],stateColor,true,false); // Placeholder for chart8
+                createBarChart('#chart8 svg', top5CitiesData2, 'facility_city', 'total_inmate_deaths', `Total Inmate Deaths in Top 5 Cities in ${state}`, colorScale,true,[],stateColor,true,false); // Placeholder for chart8
             });
            
             // Update legend for top 5 states
@@ -820,7 +820,7 @@
                 const state = d.facility_state;
                 const stateColor = colorScale(state);
                 const AllCitiesData = AllCitiesDataByState.get(state);
-                createBarChart('#chart9 svg', AllCitiesData, 'facility_city', 'total_inmate_cases', `All Cities in ${state} by Inmate Cases`, colorScale,true,[],stateColor,true,false);
+                createBarChart('#chart9 svg', AllCitiesData, 'facility_city', 'total_inmate_cases', `Total Inmate Cases in Top 10 Cities in ${state} `, colorScale,true,[],stateColor,true,false);
             
             const svg9 = d3.select("#chart9 svg");
             //svg9.selectAll(".annotation").remove();  // Clear existing annotations
@@ -840,7 +840,7 @@
                 const state = d.facility_state;
                 const stateColor = colorScale(state);
                 const AllCitiesData2 = AllCitiesDataByState2.get(state);
-                createBarChart('#chart10 svg', AllCitiesData2, 'facility_city', 'total_inmate_cases', `All Cities in ${state} by Inmate Deaths`, colorScale,true,[],stateColor,true);
+                createBarChart('#chart10 svg', AllCitiesData2, 'facility_city', 'total_inmate_cases', `Total Inmate Deaths in Top 10 Cities in ${state}`, colorScale,true,[],stateColor,true);
             });
             // Update legend for all states
             //d3.select('#legend3 svg').style('display', null);
